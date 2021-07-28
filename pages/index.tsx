@@ -26,7 +26,8 @@ export default function Home() {
     "to": ""
   }
   const [allTransaction, setAllTransctions] = useState<Transacition[]>([defaultTransction])
-  const [searchByStatus, setSearchByStatus] = useState<string>("")
+  const [nameFilter, setNameFilter] = useState<string>("")
+  const [statusFilter, setStatusFilter] = useState<String>("all")
   const [transctions, setTransctions] = useState<Transacition[]>([defaultTransction])
   const [datailsWindow, setDetailsWindow] = useState<boolean>(false)
   const [transctionOpen, setTransctionOpen] = useState<Transacition>(defaultTransction)
@@ -39,21 +40,68 @@ export default function Home() {
         setAllTransctions(data);
       });
   }, [])
+  
+  useEffect(() => {
+    const getItensFilted = () => {
+      let transctionsFilted;
+      transctionsFilted = 
+        nameFilter.length < 2
+        ? allTransaction 
+        : allTransaction.filter((el) => {
+            const title = el.title.normalize('NFD').replace(/[\u0300-\u036f]/g, "").toLowerCase()
+            const titleInput = nameFilter.normalize('NFD').replace(/[\u0300-\u036f]/g, "").toLowerCase()
 
-  const findItensByName = (value: string) => {
-    let transctionsFilted;
-    value.length < 1 ? transctionsFilted = allTransaction : transctionsFilted = allTransaction.filter((el) => el.title.toLowerCase().startsWith(value.toLowerCase()));
-    setTransctions(transctionsFilted);
-    console.log(transctionsFilted)
-    console.log(value.length)
-  }
+            const status = el.status.normalize('NFD').replace(/[\u0300-\u036f]/g, "").toLowerCase()
+            const statusInput = statusFilter.normalize('NFD').replace(/[\u0300-\u036f]/g, "").toLowerCase()
 
-  const findItensByStatus = (value: string) => {
-    let transctionsFilted;
-    value === "all" ? transctionsFilted = allTransaction : transctionsFilted = allTransaction.filter((el) => el.status == value.toLowerCase());
-    setTransctions(transctionsFilted);
-    console.log(value)
-  }
+            const statusCheck = statusFilter == "all" 
+              ? title.startsWith(titleInput) 
+              : status == statusInput && title.startsWith(titleInput);
+            console.log(el.title)
+            console.log(nameFilter)
+            return statusCheck
+          });
+    
+      setTransctions(transctionsFilted)
+    }
+
+    getItensFilted()
+  }, [nameFilter])
+    
+  useEffect(() => {
+    const getItensFilted = () => {
+      let transctionsFilted;
+      transctionsFilted = 
+        statusFilter == "all" 
+        ? allTransaction.filter((el) => {
+            const title = el.title.normalize('NFD').replace(/[\u0300-\u036f]/g, "").toLowerCase()
+            const titleInput = nameFilter.normalize('NFD').replace(/[\u0300-\u036f]/g, "").toLowerCase()
+
+            const titleCheck = titleInput.length < 2
+              ? allTransaction
+              : title.startsWith(titleInput);
+            return titleCheck
+          })
+        : allTransaction.filter((el) => {
+            const title = el.title.normalize('NFD').replace(/[\u0300-\u036f]/g, "").toLowerCase()
+            const titleInput = nameFilter.normalize('NFD').replace(/[\u0300-\u036f]/g, "").toLowerCase()
+
+            const status = el.status.normalize('NFD').replace(/[\u0300-\u036f]/g, "").toLowerCase()
+            const statusInput = statusFilter.normalize('NFD').replace(/[\u0300-\u036f]/g, "").toLowerCase()
+
+            const titleCheck = titleInput.length < 2
+              ? status == statusInput
+              : status == statusInput && title.startsWith(titleInput);
+            console.log(el.title)
+            console.log(nameFilter)
+            return titleCheck
+          });
+
+      setTransctions(transctionsFilted)
+    }
+
+    getItensFilted()
+  }, [statusFilter])
 
   const showDetails = async (id: string) => {
     await api.get(`/${id}`)
@@ -131,11 +179,12 @@ export default function Home() {
       <main className={styles.main}>
         <section>
           <input 
-            type="search" 
-            onChange={(event) => findItensByName(event.target.value)} 
+            type="text" 
+            onChange={(event) => setNameFilter(event.target.value)} value={nameFilter}
           />
-          <select onChange={(event) => findItensByStatus(event.target.value)}>
-            <option value="all">Show All</option>
+
+          <select onChange={(event) => setStatusFilter(event.target.value)}>
+            <option value="all">All</option>
             <option value="created">Created</option>
             <option value="processing">Processing</option>
             <option value="processed">Processed</option>
