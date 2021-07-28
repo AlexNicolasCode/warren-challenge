@@ -113,6 +113,18 @@
   margin-left: 0.5rem;
 }
 
+.processBar {
+  width: 500px;
+  background-color: #c4c4c4;
+}
+
+.closeWindowButton {
+  background-color: #0070f3;
+  border-radius: 30px;
+  border: none;
+  color: #c4c4c4;
+}
+
 @media (max-width: 600px) {
   .grid {
     width: 100%;
