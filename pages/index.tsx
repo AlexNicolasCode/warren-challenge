@@ -40,9 +40,17 @@ export default function Home() {
       });
   }, [])
 
-  const FindItensByStatus = (value: string) => {
+  const findItensByName = (value: string) => {
     let transctionsFilted;
-    value === "all" ? transctionsFilted = allTransaction : transctionsFilted = allTransaction.filter((el) => el.status === value);
+    value.length < 1 ? transctionsFilted = allTransaction : transctionsFilted = allTransaction.filter((el) => el.title.toLowerCase().startsWith(value.toLowerCase()));
+    setTransctions(transctionsFilted);
+    console.log(transctionsFilted)
+    console.log(value.length)
+  }
+
+  const findItensByStatus = (value: string) => {
+    let transctionsFilted;
+    value === "all" ? transctionsFilted = allTransaction : transctionsFilted = allTransaction.filter((el) => el.status == value.toLowerCase());
     setTransctions(transctionsFilted);
     console.log(value)
   }
@@ -122,7 +130,11 @@ export default function Home() {
 
       <main className={styles.main}>
         <section>
-          <select onChange={(event) => FindItensByStatus(event.target.value)}>
+          <input 
+            type="search" 
+            onChange={(event) => findItensByName(event.target.value)} 
+          />
+          <select onChange={(event) => findItensByStatus(event.target.value)}>
             <option value="all">Show All</option>
             <option value="created">Created</option>
             <option value="processing">Processing</option>
