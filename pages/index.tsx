@@ -120,6 +120,11 @@ export default function Home() {
     "processed": "100%"
   }
 
+  const translateData: any = {
+    "created": "Solicitada",
+    "processing": "Processando",
+    "processed": "Concluída"    
+  }
 
   return (
     <div className={styles.container}>
@@ -138,6 +143,8 @@ export default function Home() {
             X
           </button>
 
+          <h1>{transctionOpen.title}</h1>
+
           <div className={styles.processBar}>
             <span 
               style={{ 
@@ -145,34 +152,32 @@ export default function Home() {
                 width: `${statusTrasanctionOpen[transctionOpen.status]}` 
               }} />
           </div>
-          
-          <tr>
-            <th>Created</th>
-            <th>Processing</th>
-            <th>Processed</th>
-          </tr>
 
-          <tr>
-            <th>ID</th>
-            <th>title</th> 
-            <th>Description</th>
-            <th>Status</th>
-            <th>Amount</th>
-            <th>Date</th>
-            <th>From</th>
-            <th>To</th>
-          </tr>          
-          setSearchByStatus
-          <tr>
-            <td>{transctionOpen.id}</td>
-            <td>{transctionOpen.title}</td> 
-            <td>{transctionOpen.description}</td>
-            <td>{transctionOpen.status}</td>
-            <td>{transctionOpen.amount}</td>
-            <td>{transctionOpen.date}</td>
-            <td>{transctionOpen.from}</td>
-            <td>{transctionOpen.to}</td>
-          </tr>
+          <div>
+            <p>Solicitada</p>
+            <p>Processando</p>
+            <p>Concluída</p>
+          </div>
+
+          <div>
+            <h2>Tranferindo de</h2>
+            <table>
+              <td>
+                <td>{transctionOpen.from}</td>
+                <td>{transctionOpen.amount}</td>
+              </td>
+            </table>
+          </div>
+
+          <div>
+            <h2>Para</h2>
+            <table>
+              <tr>
+                <td>{transctionOpen.to}</td>
+                <td>{transctionOpen.amount}</td>
+              </tr>
+            </table>
+          </div>
         </section>
       }
 
@@ -184,36 +189,28 @@ export default function Home() {
           />
 
           <select onChange={(event) => setStatusFilter(event.target.value)}>
-            <option value="all">All</option>
-            <option value="created">Created</option>
-            <option value="processing">Processing</option>
-            <option value="processed">Processed</option>
+            <option value="all">Todos</option>
+            <option value="created">Solicitada</option>
+            <option value="processing">Processando</option>
+            <option value="processed">Concluída</option>
           </select>
         </section>
 
         <table>
           <tr>
-            <th>ID</th>
-            <th>title</th> 
-            <th>Description</th>
+            <th>Titulo</th> 
+            <th>Descrição</th>
             <th>Status</th>
-            <th>Amount</th>
-            <th>Date</th>
-            <th>From</th>
-            <th>To</th>
+            <th>Valor</th>
           </tr>
 
             {transctions.map((props: Transacition) => {
               return (
                 <tr key={props.id} onClick={() => showDetails(props.id)}>
-                  <td>{props.id}</td>
                   <td>{props.title}</td> 
                   <td>{props.description}</td>
-                  <td>{props.status}</td>
+                  <td>{translateData[props.status]}</td>
                   <td>{props.amount}</td>
-                  <td>{props.date}</td>
-                  <td>{props.from}</td>
-                  <td>{props.to}</td>
                 </tr>         
               )
             })}
