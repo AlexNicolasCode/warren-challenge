@@ -87,6 +87,17 @@ export default function Home() {
             <th>Processed</th>
             <th>Finished</th>
           </tr>
+
+          <tr>
+            <th>ID</th>
+            <th>title</th> 
+            <th>Description</th>
+            <th>Status</th>
+            <th>Amount</th>
+            <th>Date</th>
+            <th>From</th>
+            <th>To</th>
+          </tr>          
           
           <tr>
             <td>{transctionOpen.id}</td>
@@ -113,6 +124,7 @@ export default function Home() {
             <th>From</th>
             <th>To</th>
           </tr>
+
             {transctions.map((props: Transacition) => {
               return (
                 <tr key={props.id} onClick={() => showDetails(props.id)}>
