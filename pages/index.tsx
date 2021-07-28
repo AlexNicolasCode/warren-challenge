@@ -26,6 +26,7 @@ export default function Home() {
     "to": ""
   }
   const [allTransaction, setAllTransctions] = useState<Transacition[]>([defaultTransction])
+  const [searchByStatus, setSearchByStatus] = useState<string>("")
   const [transctions, setTransctions] = useState<Transacition[]>([defaultTransction])
   const [datailsWindow, setDetailsWindow] = useState<boolean>(false)
   const [transctionOpen, setTransctionOpen] = useState<Transacition>(defaultTransction)
@@ -38,6 +39,13 @@ export default function Home() {
         setAllTransctions(data);
       });
   }, [])
+
+  const FindItensByStatus = (value: string) => {
+    let transctionsFilted;
+    value === "all" ? transctionsFilted = allTransaction : transctionsFilted = allTransaction.filter((el) => el.status === value);
+    setTransctions(transctionsFilted);
+    console.log(value)
+  }
 
   const showDetails = async (id: string) => {
     await api.get(`/${id}`)
@@ -52,8 +60,8 @@ export default function Home() {
 
   const statusTrasanctionOpen: any = {
     "created": "0%",
-    "processed": "50%",
-    "finished": "100%"
+    "processing": "50%",
+    "processed": "100%"
   }
 
 
@@ -84,8 +92,8 @@ export default function Home() {
           
           <tr>
             <th>Created</th>
+            <th>Processing</th>
             <th>Processed</th>
-            <th>Finished</th>
           </tr>
 
           <tr>
@@ -98,7 +106,7 @@ export default function Home() {
             <th>From</th>
             <th>To</th>
           </tr>          
-          
+          setSearchByStatus
           <tr>
             <td>{transctionOpen.id}</td>
             <td>{transctionOpen.title}</td> 
@@ -113,6 +121,15 @@ export default function Home() {
       }
 
       <main className={styles.main}>
+        <section>
+          <select onChange={(event) => FindItensByStatus(event.target.value)}>
+            <option value="all">Show All</option>
+            <option value="created">Created</option>
+            <option value="processing">Processing</option>
+            <option value="processed">Processed</option>
+          </select>
+        </section>
+
         <table>
           <tr>
             <th>ID</th>
