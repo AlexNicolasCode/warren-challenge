@@ -46,7 +46,15 @@ export default function Home() {
       let transctionsFilted;
       transctionsFilted = 
         nameFilter.length < 2
-        ? allTransaction 
+        ? allTransaction.filter((el) => {
+          const status = el.status.normalize('NFD').replace(/[\u0300-\u036f]/g, "").toLowerCase()
+          const statusInput = statusFilter.normalize('NFD').replace(/[\u0300-\u036f]/g, "").toLowerCase()
+
+          const statusCheck = statusInput == "all" 
+            ? allTransaction
+            : status == statusInput
+            return statusCheck
+          })
         : allTransaction.filter((el) => {
             const title = el.title.normalize('NFD').replace(/[\u0300-\u036f]/g, "").toLowerCase()
             const titleInput = nameFilter.normalize('NFD').replace(/[\u0300-\u036f]/g, "").toLowerCase()
