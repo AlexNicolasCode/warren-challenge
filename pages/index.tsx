@@ -33,12 +33,16 @@ export default function Home() {
   const [transctionOpen, setTransctionOpen] = useState<Transacition>(defaultTransction)
 
   useEffect(() => {
-    api.get('/')
-      .then((res) => {
-        const data =  res.data;
-        setTransctions(data);
-        setAllTransctions(data);
-      });
+    const getData = () => {
+      api.get('/')
+        .then((res) => {
+          const data =  res.data;
+          setTransctions(data);
+          setAllTransctions(data);
+        });
+    }
+
+    return getData();
   }, [])
   
   useEffect(() => {
@@ -73,7 +77,7 @@ export default function Home() {
       setTransctions(transctionsFilted)
     }
 
-    getItensFilted()
+    return getItensFilted();
   }, [nameFilter])
     
   useEffect(() => {
@@ -108,7 +112,7 @@ export default function Home() {
       setTransctions(transctionsFilted)
     }
 
-    getItensFilted()
+    return getItensFilted();
   }, [statusFilter])
 
   const showDetails = async (id: string) => {
@@ -170,20 +174,24 @@ export default function Home() {
           <div>
             <h2>Tranferindo de</h2>
             <table>
-              <td>
-                <td>{transctionOpen.from}</td>
-                <td>{transctionOpen.amount}</td>
-              </td>
+              <tbody>
+                <tr>
+                  <td>{transctionOpen.from}</td>
+                  <td>{transctionOpen.amount}</td>
+                </tr>
+              </tbody>
             </table>
           </div>
 
           <div>
             <h2>Para</h2>
             <table>
-              <tr>
-                <td>{transctionOpen.to}</td>
-                <td>{transctionOpen.amount}</td>
-              </tr>
+              <tbody>
+                <tr>
+                  <td>{transctionOpen.to}</td>
+                  <td>{transctionOpen.amount}</td>
+                </tr>
+              </tbody>
             </table>
           </div>
         </section>
@@ -205,12 +213,13 @@ export default function Home() {
         </section>
 
         <table>
-          <tr>
-            <th>Titulo</th> 
-            <th>Descrição</th>
-            <th>Status</th>
-            <th>Valor</th>
-          </tr>
+          <tbody>
+            <tr>
+              <th>Titulo</th> 
+              <th>Descrição</th>
+              <th>Status</th>
+              <th>Valor</th>
+            </tr>
 
             {transctions.map((props: Transacition) => {
               return (
@@ -222,6 +231,7 @@ export default function Home() {
                 </tr>         
               )
             })}
+          </tbody>
         </table>
       </main>
     </div>
