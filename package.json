@@ -3,7 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "jest": {
-    "verbose": true
+    "moduleNameMapper": {
+      "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/__mocks__/fileMock.js",
+      "\\.(css|less|scss|sass)$": "identity-obj-proxy"
+    },
+    "testEnvironment": "jsdom"
   },
   "scripts": {
     "dev": "next dev",
@@ -20,7 +24,8 @@
     "axios": "^0.21.1",
     "next": "11.0.1",
     "react": "17.0.2",
-    "react-dom": "17.0.2"
+    "react-dom": "17.0.2",
+    "sass": "^1.36.0"
   },
   "devDependencies": {
     "@babel/core": "^7.14.8",
@@ -33,6 +38,7 @@
     "enzyme-adapter-react-16": "^1.15.6",
     "eslint": "7.31.0",
     "eslint-config-next": "11.0.1",
+    "identity-obj-proxy": "^3.0.0",
     "jest": "^27.0.6",
     "jest-dom": "^4.0.0",
     "typescript": "4.3.5"
