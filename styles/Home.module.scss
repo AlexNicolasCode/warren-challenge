@@ -1,0 +1,130 @@
+$first-color: #f8f8f8;
+$second-color: #171717;
+
+.container {
+  background-color: $first-color;
+  color: $second-color;
+}
+
+.main {
+  padding-top: 16px;
+  width: 800px;
+  margin: auto;
+
+  h1 {
+    font-size: 56px;
+    margin-top: 0;
+  } 
+
+  .filters {
+    font-size: 16px;
+
+    input {
+      background-color: $second-color;
+      color: $first-color;
+      padding: 8px;
+      border: none;
+      outline: none;
+    }
+
+    select {
+      background-color: $second-color;
+      color: $first-color;
+      font-weight: 700;
+      margin-left: 8px;
+      padding: 8px;
+      border: none;
+      outline: none;
+
+      option:hover {
+        background-color: $first-color;
+        color: $second-color;
+      }
+    }
+
+    select:after {
+      background: $first-color;
+    }
+
+  }
+}
+
+.table {
+  margin-top: 16px;
+  width: 100%;
+
+  tr {
+    background-color: $first-color;
+    text-align: left;
+
+    th {
+      padding: 16px;
+    }
+
+    td {
+      padding: 8px;
+    }
+  }
+
+  tr:nth-child(even) {
+    background: #e4e4e4;
+  }
+
+  tr:first-child {
+    background-color: $second-color;
+    color: $first-color;
+    font-weight: 700;
+    overflow-y: visible;
+  }
+}
+
+.transctionOpen {
+  align-items: center;
+  position: absolute;
+  padding: 16px;
+  width: 800px;
+  background-color: $second-color;
+  color: $first-color;
+  z-index: 1;
+
+  transform: translate(0, 50%);
+  box-shadow: 0 3px 10px $first-color;
+
+  button {
+    float: right;
+    background-color: $first-color;
+    border: none;
+    border-radius: 16px;
+    padding: 8px;
+    outline: none;
+    font-size: 8px;
+    font-weight: 700;
+  }
+
+  h2 {
+    text-align: center;
+  }
+
+  .processBar {
+    background-color: #1b1b1b;
+    height: 30px;
+    margin: auto;
+
+    div {
+      background-color: $first-color !important;
+      height: 30px;
+    }
+  }
+
+  .status {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .transfer {
+    span:last-child {
+      float: right;
+    }
+  }
+}

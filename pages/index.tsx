@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import { useEffect, useState } from 'react';
 import { api } from '../services/api';
-import styles from '../styles/Home.module.css'
+import styles from '../styles/Home.module.scss'
 
 type Transacition = {
   id: string,
@@ -127,7 +127,7 @@ export default function Home() {
   }
 
   const statusTrasanctionOpen: any = {
-    "created": "0%",
+    "created": "5%",
     "processing": "50%",
     "processed": "100%"
   }
@@ -146,61 +146,53 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      {datailsWindow && 
-        <section>
-          <button 
-            className={styles.closeWindowButton} 
-            onClick={closeTransactionOpen}
-          >
-            X
-          </button>
-
-          <h1>{transctionOpen.title}</h1>
-
-          <div className={styles.processBar}>
-            <span 
-              style={{ 
-                backgroundColor: "#020202",  
-                width: `${statusTrasanctionOpen[transctionOpen.status]}` 
-              }} />
-          </div>
-
-          <div>
-            <p>Solicitada</p>
-            <p>Processando</p>
-            <p>Concluída</p>
-          </div>
-
-          <div>
-            <h2>Tranferindo de</h2>
-            <table>
-              <tbody>
-                <tr>
-                  <td>{transctionOpen.from}</td>
-                  <td>{transctionOpen.amount}</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <div>
-            <h2>Para</h2>
-            <table>
-              <tbody>
-                <tr>
-                  <td>{transctionOpen.to}</td>
-                  <td>{transctionOpen.amount}</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </section>
-      }
-
       <main className={styles.main}>
-        <section>
+        {datailsWindow && 
+          <section className={styles.transctionOpen}>
+            <button 
+              className={styles.closeWindowButton} 
+              onClick={closeTransactionOpen}
+            >
+              X
+            </button>
+
+            <h2>{transctionOpen.title}</h2>
+
+            <div className={styles.processBar}>
+              <div 
+                style={{ 
+                  width: `${statusTrasanctionOpen[transctionOpen.status]}` 
+                }} />
+            </div>
+
+            <div className={styles.status}>
+              <p>Solicitada</p>
+              <p>Processando</p>
+              <p>Concluída</p>
+            </div>
+
+            <div className={styles.transfer}>
+              <h3>Tranferindo de</h3>
+              
+              <span>{transctionOpen.from}</span>
+              <span>R$ {transctionOpen.amount}</span>
+            </div>
+
+            <div className={styles.transfer}>
+              <h3>Para</h3>
+
+              <span>{transctionOpen.to}</span>
+              <span>R$ {transctionOpen.amount}</span>
+            </div>
+          </section>
+        }
+
+        <h1>Transações</h1>
+        
+        <section className={styles.filters}>
           <input 
             type="text" 
+            placeholder="Procure pelo título"
             onChange={(event) => setNameFilter(event.target.value)} value={nameFilter}
           />
 
@@ -212,7 +204,7 @@ export default function Home() {
           </select>
         </section>
 
-        <table>
+        <table className={styles.table}>
           <tbody>
             <tr>
               <th>Titulo</th> 
@@ -227,7 +219,7 @@ export default function Home() {
                   <td>{props.title}</td> 
                   <td>{props.description}</td>
                   <td>{translateData[props.status]}</td>
-                  <td>{props.amount}</td>
+                  <td>R$ {props.amount}</td>
                 </tr>         
               )
             })}
