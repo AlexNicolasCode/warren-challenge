@@ -1,3 +1,4 @@
+import { GetStaticProps } from 'next';
 import Head from 'next/head'
 import { useEffect, useState } from 'react';
 import { api } from '../services/api';
@@ -14,7 +15,11 @@ type Transacition = {
   to: string
 }
 
-export default function Home() {
+type InitialTrasanctions = {
+  allTransactions: Transacition[]
+}
+
+export default function Home({ allTransactions }: InitialTrasanctions) {
   const defaultTransction = {
     "id": "",
     "title": "",
@@ -25,105 +30,92 @@ export default function Home() {
     "from": "",
     "to": ""
   }
-  const [allTransaction, setAllTransctions] = useState<Transacition[]>([defaultTransction])
+  const [transctions, setTransctions] = useState<Transacition[]>(allTransactions)
   const [nameFilter, setNameFilter] = useState<string>("")
-  const [statusFilter, setStatusFilter] = useState<String>("all")
-  const [transctions, setTransctions] = useState<Transacition[]>([defaultTransction])
+  const [statusFilter, setStatusFilter] = useState<string>("all")
   const [datailsWindow, setDetailsWindow] = useState<boolean>(false)
   const [transctionOpen, setTransctionOpen] = useState<Transacition>(defaultTransction)
-
-  useEffect(() => {
-    const getData = () => {
-      api.get('/')
-        .then((res) => {
-          const data =  res.data;
-          setTransctions(data);
-          setAllTransctions(data);
-        });
-    }
-
-    return getData();
-  }, [])
   
   useEffect(() => {
-    const getItensFilted = () => {
-      let transctionsFilted;
-      transctionsFilted = 
-        nameFilter.length < 2
-        ? allTransaction.filter((el) => {
-          const status = el.status.normalize('NFD').replace(/[\u0300-\u036f]/g, "").toLowerCase()
-          const statusInput = statusFilter.normalize('NFD').replace(/[\u0300-\u036f]/g, "").toLowerCase()
+    return getItensFiltedByName();
+  }, [nameFilter])
+
+  const getItensFiltedByName = () => {
+    let transctionsFilted;
+    transctionsFilted = 
+      nameFilter.length < 2
+      ? allTransactions.filter((el) => {
+          const status = normalizeString(el.status)
+          const statusInput = normalizeString(statusFilter)
 
           const statusCheck = statusInput == "all" 
-            ? allTransaction
-            : status == statusInput
-            return statusCheck
-          })
-        : allTransaction.filter((el) => {
-            const title = el.title.normalize('NFD').replace(/[\u0300-\u036f]/g, "").toLowerCase()
-            const titleInput = nameFilter.normalize('NFD').replace(/[\u0300-\u036f]/g, "").toLowerCase()
+          ? allTransactions
+          : status == statusInput
+          
+          return statusCheck
+        })
+      : allTransactions.filter((el) => {
+          const title = normalizeString(el.title)
+          const titleInput = normalizeString(nameFilter)
 
-            const status = el.status.normalize('NFD').replace(/[\u0300-\u036f]/g, "").toLowerCase()
-            const statusInput = statusFilter.normalize('NFD').replace(/[\u0300-\u036f]/g, "").toLowerCase()
+          const status = normalizeString(el.status)
+          const statusInput = normalizeString(statusFilter)
 
-            const statusCheck = statusFilter == "all" 
-              ? title.startsWith(titleInput) 
-              : status == statusInput && title.startsWith(titleInput);
-            console.log(el.title)
-            console.log(nameFilter)
-            return statusCheck
-          });
-    
-      setTransctions(transctionsFilted)
-    }
-
-    return getItensFilted();
-  }, [nameFilter])
+          const statusCheck = statusFilter == "all" 
+            ? title.startsWith(titleInput) 
+            : status == statusInput && title.startsWith(titleInput);
+          return statusCheck
+        });
+  
+    setTransctions(transctionsFilted)
+  }
     
   useEffect(() => {
-    const getItensFilted = () => {
-      let transctionsFilted;
-      transctionsFilted = 
-        statusFilter == "all" 
-        ? allTransaction.filter((el) => {
-            const title = el.title.normalize('NFD').replace(/[\u0300-\u036f]/g, "").toLowerCase()
-            const titleInput = nameFilter.normalize('NFD').replace(/[\u0300-\u036f]/g, "").toLowerCase()
+    return getItensFiltedByStatus();
+  }, [statusFilter]);
+  
+  const getItensFiltedByStatus = () => {
+    let transctionsFilted;
+    transctionsFilted = 
+      statusFilter == "all" 
+      ? allTransactions.filter((el) => {
+          const title = normalizeString(el.title);
+          const titleInput = normalizeString(nameFilter);
 
-            const titleCheck = titleInput.length < 2
-              ? allTransaction
-              : title.startsWith(titleInput);
-            return titleCheck
-          })
-        : allTransaction.filter((el) => {
-            const title = el.title.normalize('NFD').replace(/[\u0300-\u036f]/g, "").toLowerCase()
-            const titleInput = nameFilter.normalize('NFD').replace(/[\u0300-\u036f]/g, "").toLowerCase()
+          const titleCheck = titleInput.length < 2
+            ? allTransactions
+            : title.startsWith(titleInput);
+          return titleCheck
+        })
+      : allTransactions.filter((el) => {
+          const title = normalizeString(el.title);
+          const titleInput = normalizeString(nameFilter);
 
-            const status = el.status.normalize('NFD').replace(/[\u0300-\u036f]/g, "").toLowerCase()
-            const statusInput = statusFilter.normalize('NFD').replace(/[\u0300-\u036f]/g, "").toLowerCase()
+          const status = normalizeString(el.status)
+          const statusInput = normalizeString(statusFilter)
 
-            const titleCheck = titleInput.length < 2
-              ? status == statusInput
-              : status == statusInput && title.startsWith(titleInput);
-            console.log(el.title)
-            console.log(nameFilter)
-            return titleCheck
-          });
+          const titleCheck = titleInput.length < 2
+            ? status == statusInput
+            : status == statusInput && title.startsWith(titleInput);
+          return titleCheck
+        });
 
-      setTransctions(transctionsFilted)
-    }
-
-    return getItensFilted();
-  }, [statusFilter])
+    setTransctions(transctionsFilted)
+  }
+  const normalizeString = (value: string) => {
+    return value.normalize('NFD').replace(/[\u0300-\u036f]/g, "").toLowerCase()
+  }
 
   const showDetails = async (id: string) => {
-    await api.get(`/${id}`)
-      .then((res) => setTransctionOpen(res.data));
     setDetailsWindow(true)
+    const { data } = await api.get(`/${id}`);
+
+    return () => setTransctionOpen(data)
   }
 
   const closeTransactionOpen = () => {
     setDetailsWindow(false)
-    setTransctionOpen(defaultTransction)
+    return () => setTransctionOpen(defaultTransction)
   }
 
   const statusTrasanctionOpen: any = {
@@ -148,8 +140,9 @@ export default function Home() {
 
       <main className={styles.main}>
         {datailsWindow && 
-          <section className={styles.transctionOpen}>
+          <section data-testid="detailsWindow" className={styles.transctionOpen}>
             <button 
+              data-testid="close-button"
               className={styles.closeWindowButton} 
               onClick={closeTransactionOpen}
             >
@@ -191,12 +184,13 @@ export default function Home() {
         
         <section className={styles.filters}>
           <input 
+            data-testid="search-input"
             type="text" 
             placeholder="Procure pelo título"
             onChange={(event) => setNameFilter(event.target.value)} value={nameFilter}
           />
 
-          <select onChange={(event) => setStatusFilter(event.target.value)}>
+          <select data-testid="select" onChange={(event) => setStatusFilter(event.target.value)}>
             <option value="all">Todos</option>
             <option value="created">Solicitada</option>
             <option value="processing">Processando</option>
@@ -213,9 +207,9 @@ export default function Home() {
               <th>Valor</th>
             </tr>
 
-            {transctions.map((props: Transacition) => {
+            {transctions.map((props: Transacition, index) => {
               return (
-                <tr key={props.id} onClick={() => showDetails(props.id)}>
+                <tr data-testid="transaction" id={props.id} key={index} onClick={() => showDetails(props.id)}>
                   <td>{props.title}</td> 
                   <td>{props.description}</td>
                   <td>{translateData[props.status]}</td>
@@ -228,4 +222,15 @@ export default function Home() {
       </main>
     </div>
   )
+}
+
+export const getStaticProps: GetStaticProps = async () => {
+  const { data } = await api.get('/')
+  const allTransactions = data;
+
+  return {
+    props: {
+      allTransactions
+    }
+  }
 }
