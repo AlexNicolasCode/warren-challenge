@@ -25,6 +25,7 @@ yarn dev
 - TypeScript
 - Sass
 - Jest
+- Axios
 
 ## API used
 - [Warren API to Challenge](https://warren-transactions-api.herokuapp.com/api/transactions)
