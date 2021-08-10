@@ -107,10 +107,10 @@ export default function Home({ allTransactions }: InitialTrasanctions) {
   }
 
   const showDetails = async (id: string) => {
-    setDetailsWindow(true)
     const { data } = await api.get(`/${id}`);
+    setDetailsWindow(true)
 
-    return () => setTransctionOpen(data)
+    return setTransctionOpen(data)
   }
 
   const closeTransactionOpen = () => {
