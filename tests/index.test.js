@@ -160,12 +160,13 @@ describe("render index.tsx", () => {
             render(<Home allTransactions={props.allTransactions} />)
         });
 
-        const transaction = document.getElementById("5f89f9f271e4213092bd4e41")
+        const transaction = await screen.findByText("et labore proident aute nulla");
         act(() => {
             fireEvent.click(transaction)
         })
 
-        await (() => expect(screen.getByTestId("detailsWindow")).toBeInTheDocument())
+        const title = await screen.findByText("Tranferindo de");
+        expect(title).toBeTruthy()
     });
     test("details user in datailsWindow", async () => {
         await act(async () => {
@@ -173,13 +174,16 @@ describe("render index.tsx", () => {
             render(<Home allTransactions={props.allTransactions} />)
         });
 
-        const transaction = document.getElementById("5f89f9f271e4213092bd4e41")
+        const transaction = await screen.findByText("et labore proident aute nulla");
         act(() => {
             fireEvent.click(transaction)
         })
 
-        await (() => expect(screen.getByTestId("detailsWindow")).toBeInTheDocument())
-        await (() => expect(screen.getByText('148856.29')).toBeInTheDocument())
+        const title = await screen.findByText("Tranferindo de");
+        expect(title).toBeTruthy()
+
+        const date = await screen.findByText("Conta Warren");
+        expect(date).toBeTruthy()
     });
     test("close datailsWindow", async () => {
         await act(async () => {
@@ -187,18 +191,22 @@ describe("render index.tsx", () => {
             render(<Home allTransactions={props.allTransactions} />)
         });
 
-        const transaction = document.getElementById("5f89f9f271e4213092bd4e41")
+        const transaction = await screen.findByText("et labore proident aute nulla");
         act(() => {
             fireEvent.click(transaction)
         })
-        
-        await (() => expect(screen.getByTestId("detailsWindow")).toBeInTheDocument())   
 
-        const closeButton = screen.getByTestId("close-button")
+        const title = await screen.findByText("Tranferindo de");
+        expect(title).toBeTruthy()
+
+        const date = await screen.findByText("Conta Warren");
+        expect(date).toBeTruthy();
+
+        const closeButton = await screen.getByTestId("close-button")
         act(() => {
             fireEvent.click(closeButton)
         });
 
-        await (() => expect(screen.getByTestId("detailsWindow").not.toExist()))  
+        expect(screen.findByText("Tranferindo de").value).toBeUndefined()
     });
 })
