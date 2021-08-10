@@ -168,14 +168,14 @@ export default function Home({ allTransactions }: InitialTrasanctions) {
               <h3>Tranferindo de</h3>
               
               <span>{transctionOpen.from}</span>
-              <span>R$ {transctionOpen.amount}</span>
+              <span>- R$ {transctionOpen.amount}</span>
             </div>
 
             <div className={styles.transfer}>
               <h3>Para</h3>
 
               <span>{transctionOpen.to}</span>
-              <span>R$ {transctionOpen.amount}</span>
+              <span>+ R$ {transctionOpen.amount}</span>
             </div>
           </section>
         }
